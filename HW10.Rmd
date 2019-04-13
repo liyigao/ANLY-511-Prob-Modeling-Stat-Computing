@@ -1,0 +1,300 @@
+---
+title: "HW10"
+author: "Yigao Li"
+date: "December 11, 2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Part 1
+
+## Problem 1
+
+(a)
+```{r}
+beerwing <- read.csv("D:/Courses/ANLY 511/Beerwings.csv")
+plot(beerwing$Hotwings, beerwing$Beer, xlab = "Hot Wings", ylab = "Beer",
+     main = "Beer Consumed against Hot Wings Eaten")
+cor(beerwing$Hotwings, beerwing$Beer)
+```
+The correlation between beer and hot wings is $0.7841224$.  
+  
+(b)
+```{r}
+model.1 <- lm(Beer ~ Hotwings, data = beerwing)
+summary(model.1)
+```
+$\text{Beer }=3.0404+1.9408\times\text{ Hotwing }+\epsilon$  
+The slope means that as you eat $1$ more hot wing, the estimated average amount of beer consumed increases by $1.9408$.  
+  
+(c)  
+R-squared is $0.6148$. We can explain $61.48\%$ of the variability in beer consumption by using hot wings in a regression model.  
+  
+## Problem 2
+
+(a)
+```{r}
+illiteracy <- read.csv("D:/Courses/ANLY 511/Illiteracy.csv")
+plot(illiteracy$Illit, illiteracy$Births, xlab = "Illiteracy", ylab = "Birth Rate",
+     main = "Birth Rate against Female Illiteracy")
+```
+Birth rate and female literacy tend to be linearly related.  
+  
+(b)
+```{r}
+model.2 <- lm(Births ~ Illit, data = illiteracy)
+summary(model.2)
+```
+$\text{Births }=1.94874+0.05452\times\text{ Illit }+\epsilon$  
+The slope means that as female illiteracy goes up by $1\%$, the estimated average birth rate goes up by $0.05452\%$.  
+R-squared is $0.5908$. We can explain $59.08\%$ of the variability in birth rate by using female illiteracy in a regression model.  
+  
+(c)
+```{r}
+plot(model.2)
+```
+From the Residuals vs Fitted plot, we can see that the linear model is appropriate.  
+  
+(d)  
+We can conclude that improving literacy will decrease birth rate because p-value for slope coefficient is very small.  
+  
+## Problem 3
+  
+(a)
+```{r}
+volleyball <- read.csv("D:/Courses/ANLY 511/Volleyball2009.csv")
+plot(volleyball$Assts, volleyball$Kills, xlab = "Assists", ylab = "Kills",
+     main = "Number of Kills against Assists Per Set")
+```
+The number of kills increases as the number of assists goes up.  
+  
+(b)
+```{r}
+model.3 <- lm(Kills ~ Assts, data = volleyball)
+summary(model.3)
+```
+$\text{Kills }=1.73626+0.94699\times\text{ Assts }+\epsilon$  
+The slope means that as the number of assists goes up by $1$, the estimated number of kills goes up by $0.94699$ in average.  
+R-squared is $0.9367$. We can explain $93.67\%$ of the variability in birth rate by using female illiteracy in a regression model.  
+  
+(c)
+```{r}
+plot(model.3)
+```
+This linear model is appropriate.  
+  
+## Problem 4
+  
+(a)
+```{r}
+birth <- read.csv("D:/Courses/ANLY 511/NCBirths2004.csv")
+plot(birth$Gestation, birth$Weight)
+cor(birth$Gestation, birth$Weight)
+```
+The correlation is $0.3486057$.  
+  
+(b)
+```{r}
+model.4 <- lm(Weight ~ Gestation, data = birth)
+summary(model.4)
+```
+$\text{Weight }=-2379.69+149\times\text{ Gestation }+\epsilon$  
+  
+(c)  
+The slope means that as gestation period goes up by $1$, the estimated weight goes up by $149$ in average.  
+R-squared is $0.1215$. We can explain $12.15\%$ of the variability in birth rate by using female illiteracy in a regression model.  
+  
+(d)
+```{r}
+plot(model.4)
+```
+Equal variance may be a problem because every group of points has different variance.  
+  
+## Problem 5
+  
+(a)  
+$$10\times1.45=14.5$$
+Test score will increase $14.5$ points.  
+  
+(b)  
+$$\begin{aligned}
+SD(Score)&=\frac{\beta_1^2SD(Hours)}r\\
+&=1.45\times27.5/\sqrt{0.855}\\
+&=43.12386\\
+\end{aligned}$$
+  
+(c)
+```{r}
+n <- 100
+beta.1_hat <- 1.45
+SE <- 43.12386/sqrt(n-2)/27.5
+lower.bound <- beta.1_hat - qt(0.975, n-2) * SE
+upper.bound <- beta.1_hat + qt(0.975, n-2) * SE
+cat("95% confidence interval for the true slope is [", lower.bound, ",", upper.bound, "].")
+```
+  
+(d)
+```{r}
+x_bar <- 55
+x_star <- 50
+SDx <- 27.5
+SSx <- (n-1)*SDx^2
+SSE <- 16.54
+SE_mean_Y <- SSE*sqrt(1/n + (x_star - x_bar)^2/SSx)
+lower.bound <- 502.7+1.45*x_star - qt(0.975, n-2) * SE_mean_Y
+upper.bound <- 502.7+1.45*x_star + qt(0.975, n-2) * SE_mean_Y
+cat("95% confidence interval for the mean score when tutored 50 h is [", lower.bound, ",", upper.bound, "].")
+```
+  
+# Part 2
+  
+## Single linear model
+  
+(a)
+```{r}
+library(MASS)
+data(Boston)
+plot(Boston$rm, Boston$medv)
+```
+  
+(b)  
+The slope should be positive.  
+It will not pass 0 because both variable "medv" is the median value of owner-occupied homes in \$1000s. It cannot be negative.  
+  
+(c)  
+i.  
+```{r}
+medv_model<- lm(medv~rm,data=Boston)
+summary(medv_model)
+```
+ii.
+```{r}
+plot(Boston$rm, Boston$medv)
+abline(coef = c(-34.671, 9.102))
+```
+iii.  
+Slope means that as average number of rooms per dwelling increases by $1$, the estimated median value of owner-occupied homes increases $\$9,102$.  
+Intercepts means that when there is no room per dwelling. The estimated median value of owner-occupied homes is $\$-34,671$, which is in this case is meaningless.  
+  
+(d)  
+i.
+```{r}
+medv_residuals <- residuals(medv_model)
+```
+ii.
+```{r}
+hist(medv_residuals, main = "Histogram of Residuals")
+qqnorm(medv_residuals)
+qqline(medv_residuals)
+```
+iii.  
+Residuals is normally distributed within $\pm1$ standard deviation.  
+  
+(e)  
+Summary information is shown in part(c)i.    
+i.  
+P-value for intercept and slope are both less than $2\times10^{-16}$, and they are statistically significant.  
+ii.  
+Multiple R-squared is $0.4835$. We can explain $48.35\%$ of the variability in median value of owner-occupied homes by using average number of rooms per dwelling in a regression model.  
+iii.  
+F-statistics is $471.8$ with degrees of freedom $1$ and $504$. P-value is also less than $2\times10^{-16}$. But it does not contradict with Multiple R-squared, because $r^2$ means the variance of data points is high around the regression line.  
+
+## Polynomial Regression
+  
+(a)
+```{r}
+plot(Boston$dis, Boston$nox, main = "Dis vs. Nox",
+     xlab='Dis', ylab='Nox', pch=16, cex=0.5)
+m2 <- lm(nox ~ poly(dis,2), data=Boston)
+newdata <- data.frame(dis=seq(0,12,by=0.1))
+predicted_value <- predict(m2, newdata = newdata)
+points(unlist(newdata),predicted_value, col='red', type='l')
+summary(m2)
+```
+It is not linear. But it looks like negative logarithm function.  
+  
+(b)  
+i.  
+It looks like quadratic when Dis is between $2$ and $10$.  
+ii.  
+Intercept: When weighted mean distance to five Boston employment centers is $0$, the nitrogen oxides concentration is $0.554695$ parts per $10$ million.  
+There's no interpretation for other $2$ coefficients due to quadratic equation.  
+iii.  
+P-values for all parameters are less than $2\times10^{-16}$. They are statistically significant.  
+iv.  
+Multiple R-squared is $0.6999$ and F statistics is $586.4$ with $2$ and $503$ degrees of freedom.  
+v.  
+Like I said, this only looks like quadratic when dis is below $10$. When dis is greater than $12$, this model fails.  
+  
+(c)  
+i.
+```{r}
+plot(Boston$dis, Boston$nox, main = "Dis vs. Nox (cubic)",
+     xlab='Dis', ylab='Nox', pch=16, cex=0.5)
+m3 <- lm(nox ~ poly(dis,3), data=Boston)
+newdata <- data.frame(dis=seq(0,12,by=0.1))
+predicted_value <- predict(m3, newdata = newdata)
+points(unlist(newdata),predicted_value, col='red', type='l')
+summary(m3)
+```
+Based on Multiple R-squared, cubic regression is better.  
+ii.
+```{r}
+m3_residuals <- residuals(m3)
+hist(m3_residuals)
+qqnorm(m3_residuals)
+qqline(m3_residuals)
+```
+  
+## Multiple regression
+  
+(a)  
+```{r}
+pairs(Boston, cex=0.4, pch=15)
+```
+"nox" and "lstat" look correlated with "age".  
+  
+(b)  
+i.
+```{r}
+cor(Boston$rm, Boston$lstat)
+medv_subset <- Boston[,c("medv", "rm", "dis", "lstat")]
+pairs(medv_subset, cex=0.4, pch=15)
+medv_model<- lm(medv~rm+lstat+dis, data=medv_subset)
+summary(medv_model)
+medv_model_log<- lm(medv~rm+lstat+log(dis), data=medv_subset)
+summary(medv_model_log)
+```
+"rm" and "lstat" are negative correlated. When building models with these two variables, it will cause Multicollinearity. Estimated coefficients may change dramatically in response to small changes in data.  
+ii.  
+Adjusted R-squared is $0.6447$.  
+iii.  
+Using "log(dis)", adjusted R-squared does not improve much from $0.6447$ to $0.6481$.  
+```{r}
+medv_log_residuals <- residuals(medv_model_log)
+p1 <- hist(medv_log_residuals)
+```
+Residuals of medv model with log(dis) are normally distributed.  
+  
+(c)  
+i.
+```{r}
+medv_model_1<- lm(medv~rm+lstat+dis - 1, data=medv_subset)
+summary(medv_model_1)
+```
+In the previous model, p-value for intercept is $0.404781$, which is not statistically significant.  
+ii.  
+Adjusted R-squared is $0.9493$.  
+iii.
+```{r}
+medv_1_residuals <- residuals(medv_model_1)
+p2 <- hist(medv_1_residuals)
+plot(p1, col = rgb(0,0,1,1/4), xlim = c(-20,20))
+plot(p2, col = rgb(1,0,0,1/4), xlim = c(-20,20), add = TRUE)
+```
+Residuals of model without intercept have less variance than model using log(dis).

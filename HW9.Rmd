@@ -1,0 +1,132 @@
+---
+title: "HW9"
+author: "Yigao Li"
+date: "November 28, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 1 (7-9)
+(a)
+```{r}
+spruce <- read.csv("D:/Courses/ANLY 511/Spruce.csv")
+hist(spruce$Ht.change, prob = TRUE, main = "Distribution of Ht.change")
+```
+(b)
+```{r}
+dHeight <- spruce$Height5 - spruce$Height0
+n <- length(dHeight)
+dHeight.s <- sd(dHeight)
+dHeight.mu <- mean(dHeight)
+error <- dHeight.s/sqrt(n)
+talpha <- qt(0.975, n-1)
+cat("95% t confidence interval for the mean height change over the 5-year period is [", dHeight.mu-talpha*error, ",", dHeight.mu+talpha*error, "].")
+```
+We are 95% confident that the true height change is between 28.33685 and 33.52982.
+
+## Problem 2 (7-10)
+
+```{r}
+n1 <- 43
+x1 <- 5.8
+s1 <- 8.6
+n2 <- 36
+x2 <- 1.9
+s2 <- 4.2
+talpha <- qt(0.975, n1+n2-2)
+me <- talpha * sqrt(s1^2/n1 + s2^2/n2)
+cat("95% t confidence interval for the mean difference in weight loss between 2 groups is [", x1-x2-me, ",", x1-x2+me, "].")
+```
+We are 95% confident that the true difference in weight loss between 2 groups is between 0.9397875 and 6.860212.
+
+## Problem 3 (7-20)
+(a)
+```{r}
+nf <- 980
+mf <- 459
+nm <- 759
+mm <- 426
+pf_hat <- mf/nf
+zalpha <- qnorm(0.975)
+lowerbound <- pf_hat - zalpha * sqrt(pf_hat*(1-pf_hat)/nf)
+upperbound <- pf_hat + zalpha * sqrt(pf_hat*(1-pf_hat)/nf)
+cat("95% confidence interval for the proportion of women who voted for Bush is [", lowerbound, ",", upperbound, "].")
+```
+(b)
+```{r}
+pm_hat <- mm/nm
+lowerbound <- pm_hat - zalpha * sqrt(pm_hat*(1-pm_hat)/nm)
+upperbound <- pm_hat + zalpha * sqrt(pm_hat*(1-pm_hat)/nm)
+cat("95% confidence interval for the proportion of men who voted for Bush is [", lowerbound, ",", upperbound, "].")
+```
+No, confidence intervals for men and women do not overlap. The proportion of men voting for Bush is higher than that of women.  
+(c)
+```{r}
+p_hat <- (mf+mm)/(nf+nm)
+se <- sqrt(p_hat*(1-p_hat)*(1/nf+1/nm))
+lowerbound <- pm_hat - pf_hat - zalpha * se
+upperbound <- pm_hat - pf_hat + zalpha * se
+cat("95% confidence interval for the difference in proportions (men - women) is [", lowerbound, ",", upperbound, "].")
+```
+We are 95% confident that proportion of men voting for Bush is 4.552076% to 14.02742% higher than proportion of women voting for Bush.
+
+## Problem 4 (8-3)
+(a)  
+$H_0$: $\mu=98.6$  
+$H_a$: $\mu>98.6$  
+
+(b)  
+```{r}
+temperature <- c(98, 98.9, 99, 98.9, 98.8, 98.6, 99.1, 98.9, 98.5, 98.9, 98.9, 98.4, 99, 99.2, 98.6, 98.8, 98.9, 98.7)
+t.test(temperature, alternative = "greater", mu = 98.6)
+```
+P-value is $0.006907<\alpha=0.05$. We reject $H_0$ and conclude that body temperatures in children in Sober are higher than the standard one.
+
+## Problem 5 (8-10)
+$H_0$: $\hat p=29.1\%$  
+$H_a$: $\hat p<29.1\%$
+```{r}
+prop.test(87, 350, p = 0.291, alternative = "less")
+```
+P-value is $0.04564<\alpha=0.05$. We reject $H_0$ and sample data supports professor's hypothesis.
+
+## Problem 6 (7-30)
+Without loss of generality, assume that $\hat\theta_1\geq\hat\theta_2$.  
+$(\implies)\hat\theta_1\pm1.96\hat{SE}_1$ and $\hat\theta_2\pm1.96\hat{SE}_2$ overlap. Therefore,  
+$$\hat\theta_1-1.96\hat{SE}_1\leq\hat\theta_2+1.96\hat{SE}_2$$
+$$\hat\theta_1-\hat\theta_2-1.96(\hat{SE}_1+\hat{SE}_2)\leq0$$
+Since $\hat\theta_1-\hat\theta_2\geq0$, $\hat{SE}_1,\hat{SE}_2\geq0$,  
+$\hat\theta_1-\hat\theta_2+1.96(\hat{SE}_1+\hat{SE}_2)\geq0$$
+Therefore, $\hat\theta_1-\hat\theta_2\pm1.96(\hat{SE}_1+\hat{SE}_2)$ must contain $0$.  
+$(\impliedby)\hat\theta_1-\hat\theta_2\pm1.96(\hat{SE}_1+\hat{SE}_2)$ contains $0$  
+$$\hat\theta_1-\hat\theta_2+1.96(\hat{SE}_1+\hat{SE}_2)\geq0$$
+$$\hat\theta_1-\hat\theta_2-1.96(\hat{SE}_1+\hat{SE}_2)\leq0$$
+So,  
+$$\hat\theta_1-1.96\hat{SE}_1\leq\hat\theta_2+1.96\hat{SE}_2$$
+Because $\hat\theta_1\geq\hat\theta_2$, $\hat\theta_1\pm1.96\hat{SE}_1$ and $\hat\theta_2\pm1.96\hat{SE}_2$ must overlap.
+
+## Problem 7 (7-33)
+(a)  
+Let $s^2$ be sample variance. By Central Limit Theorem, $\lambda\sim N(\bar X, \frac{s^2}n)$. Therefore, 95% confidence interval is [$\bar X-1.96\frac s{\sqrt{n}},\bar X+1.96\frac s{\sqrt{n}}$]  
+(b)  
+```{r}
+x <- c(4,6,7,9,10,13)
+mean(x)
+var(x)
+```
+$\bar X=\frac{49}6$, $s^2=\frac{61}6$, $n=6$, 95% confidence interval [$5.6,10.7$]  
+
+## Problem 8 (8-22)
+(a)  
+```{r}
+ppois(16/5, 2, lower.tail = FALSE)
+```
+The probability of a Type I error is 14.28765%.  
+(b)  
+```{r}
+ppois(16/5, 4, lower.tail = TRUE)
+```
+The probability of a Type II error is 43.34701%.

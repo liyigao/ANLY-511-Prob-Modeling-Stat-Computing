@@ -1,0 +1,154 @@
+---
+title: "HW1"
+author: "Yigao Li"
+date: "September 14, 2017"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Problem 1
+
+```{r}
+a <- floor(sin(1.23) * 1e10) - floor(sin(1.23) * 1e9) * 10
+b <- sqrt(a^2 + a^3)
+c <- nchar(floor(exp((log(b))^3)))
+d <- 0
+for (j in 1:c){
+  d = d + j^3
+}
+e <- d %% 77
+cat('a =', a, '\nb =', b, '\nc =', c, '\nd =', d, '\ne =', e)
+```
+
+# Problem 2
+
+```{r}
+library(tictoc)
+
+mytoss = function(p){
+  u <- runif(1)
+  x <- as.numeric(u < p)
+  return(x)
+}
+
+myattempts = function(p){
+  counter <- 1
+  while (mytoss(p) == 0){
+    counter <- counter + 1
+  }
+  return(counter)
+}
+
+prob <- c(0.04, 0.14, 0.53, 0.85, 0.93)
+
+for (p in prob){
+  tic.clearlog()
+  for (i in 1:1000){
+    tic(i)
+    myattempts(p)
+    toc(log = TRUE, quiet = TRUE)
+  }
+  log.lst <- tic.log(format = FALSE)
+  timings <- unlist(lapply(log.lst, function(x) x$toc - x$tic))
+  cat('Average time for myattempts when p =', p, 'is', mean(timings), 'sec\n')
+  tic.clearlog()
+  for (j in 1:1000){
+    tic(j)
+    1 + rgeom(1, p)
+    toc(log = TRUE, quiet = TRUE)
+  }
+  log.lst <- tic.log(format = FALSE)
+  timings <- unlist(lapply(log.lst, function(x) x$toc - x$tic))
+  cat('Average time for 1+rgeom(1,p) when p =', p, 'is', mean(timings), 'sec\n')
+}
+```
+
+Note that, from above results, "myattempts" method costs more time than "1+rgeom(1,p)" method, because "myattempts" will always call "mytoss" function until it reaches a successful trial. Also, when the probability p is getting smaller, it would take more trials to succeed. Therefore, time spent will be larger.
+
+# Problem 3
+
+Calculate standard deviation of a geometric distribution using formula $\frac{\sqrt{1-p}}{p}$
+
+```{r}
+for (p in prob){
+  sd_geo <- (sqrt(1-p)/p)
+  cat("Standard deviation of geometric distribution (p =", p, ") is", sd_geo, "\n")
+}
+```
+
+Simulate geometric distribution to calculate standard deviation. Since "myattempts(p)" and "1+rgeom(1,p)" are essentially the same thing, I use "1+rgeom(1,p)" in this problem to save running time.
+
+```{r}
+for (p in prob){
+  data <- replicate(1000, 1 + rgeom(1, p))
+  cat("Estimated standard deviation of geometric distribution (p =", p, ") is", sd(data),
+      "\n")
+}
+```
+
+# Problem 4
+
+```{r}
+replicate(10, mean(rexp(20)))
+sapply(1:10, function(x) mean(rexp(20)))
+```
+
+# Problem 5
+
+## Pros
+
+**SAS** has procedures that could draw maps, as well as graphic template language with map layers. It can deal with extremely large dataset because of its data storage system. SAS is not simply a statistical software, but it is a Business Analytics and Business Intelligence software. It is widely used in finance, communication, energy, government, pharmacy, manufacturing, retailer, etc.
+
+**R** is a free statistical programming substitute for MATLAB or SAS. It is friendly for beginners. Statements are concise and clear. R has advantages while doing stochastic process analysis. R can create some basic statistical plots. R also has packages that can scrape web.
+
+## Cons
+
+**SAS**'s code has its own standard, which is comparatively complicated. SAS is very expensive for personal users and it does not update patches frequently.
+
+**R** cannot handle huge dataset over hundreds of megabytes. Since it is an open source platform with open codes, developers cannot share packages during development stage.
+
+# Problem 6
+
+```{r}
+n <- 1000
+N <- 1e8
+cat("The probability that I will be in this sample is", n/N, '\n')
+m <- 2000
+cat("The probability that I will not be in any of the samples is", ((N-n)/N)^m, '\n')
+p <- 0.5
+cat(round(log(p, base = (N-n)/N)), "samples must be selected to have a", p,
+    "probability of being in at least one sample.")
+```
+
+# Problem 7
+
+```{r}
+prob7 <- c(0.1, 0.3, 0.7)
+n <- 4
+for (p in prob7){
+  data7 <- replicate(n, 1 + rgeom(1, p))
+  p_hat <- (sqrt(1 + 8 * mean(data7^2)) - 1)/(2 * mean(data7^2))
+  cat("Bias for p =", p, "is", p_hat - p, '\n')
+}
+```
+
+# Problem 8
+
+```{r}
+n <- 10000
+y <- 0
+for (i in 1:n){
+  x <- runif(1)
+  for (i in 2:10){
+    x <- runif(1, max = 2 * x)
+  }
+  y <- y + x
+}
+cat("The expected value of X_10 is", y/n)
+```

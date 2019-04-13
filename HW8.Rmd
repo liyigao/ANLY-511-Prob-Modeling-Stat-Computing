@@ -1,0 +1,154 @@
+---
+title: "HW8"
+author: "Yigao Li"
+date: "November 19, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 1 (6.4-3)
+
+$f(x_1=5;\theta)=\frac{\theta}{2\sqrt{x_1}}e^{-\theta\sqrt{x_1}}=\frac{\theta}{2\sqrt5}e^{-\sqrt5\theta}$  
+$f(x_2=9;\theta)=\frac{\theta}{2\sqrt{x_2}}e^{-\theta\sqrt{x_2}}=\frac{\theta}6e^{-3\theta}$  
+$f(x_3=9;\theta)=\frac{\theta}{2\sqrt{x_3}}e^{-\theta\sqrt{x_3}}=\frac{\theta}6e^{-3\theta}$  
+$f(x_4=10;\theta)=\frac{\theta}{2\sqrt{x_4}}e^{-\theta\sqrt{x_4}}=\frac{\theta}{2\sqrt{10}}e^{-\sqrt{10}\theta}$  
+$\mathcal{L}(\theta;x_1=5,x_2=9,x_3=9,x_4=10)=f(x_1=5,x_2=9,x_3=9,x_4=10;\theta)=\frac{\theta^4}{720\sqrt2}e^{(-\sqrt5-3-3-\sqrt{10})\theta}$  
+$\ell(\theta;x_1=5,x_2=9,x_3=9,x_4=10)=\frac{\theta^3}{180\sqrt2}e^{(-\sqrt5-3-3-\sqrt{10})\theta}+\frac{\theta^4}{720\sqrt2}e^{(-\sqrt5-3-3-\sqrt{10})\theta}(-\sqrt5-3-3-\sqrt{10})$  
+Set  
+$$\begin{aligned}
+\ell&=0\\
+\frac{\hat\theta^3}{180\sqrt2}e^{(-\sqrt5-3-3-\sqrt{10})\hat\theta}&=\frac{\hat\theta^4}{720\sqrt2}e^{(-\sqrt5-3-3-\sqrt{10})\hat\theta}(\sqrt5+3+3+\sqrt{10})\\
+1&=(\sqrt5+3+3+\sqrt{10})\frac{\hat\theta}4\\
+\hat\theta&=\frac4{\sqrt5+3+3+\sqrt{10}}
+\end{aligned}$$
+
+## Problem 2 (6.4-7)
+
+$\mathcal{L}(\theta;x_1,\dots,x_n)=f(x_1,\dots,x_n;\theta)=\frac{e^{-\sum_{i=1}^nx_i}}{(1-e^{-\theta})^n}$  
+$log\mathcal{L}(\theta;x_1,\dots,x_n)=-\sum_{i=1}^nx_i-nlog(1-e^{-\theta})$  
+$(log\mathcal{L})'=-\frac{ne^{-\theta}}{1-e^{-\theta}}=-\frac{n}{e^{\theta}-1}$  
+Since $(log\mathcal{L})'$ can never be equal to $0$, the MLE of $\theta$ does not exist.  
+
+## Problem 3 (6.4-10)
+
+$f(x=95;\mu)=\frac1{\sqrt{2\pi}15}e^{-\frac{(x-\mu)^2}{2\times15^2}}=\frac1{\sqrt{2\pi}15}e^{-\frac{(95-\mu)^2}{2\times15^2}}$  
+$f(y=130;\mu)=\frac1{\sqrt{2\pi}20}e^{-\frac{(y-\mu)^2}{2\times20^2}}=\frac1{\sqrt{2\pi}20}e^{-\frac{(130-\mu)^2}{2\times20^2}}$  
+$\mathcal{L}(\mu;x=95,y=130)=f(x=95,y=130;\mu)=\frac1{2\pi\times15\times20}e^{-\frac{(95-\mu)^2}{2\times15^2}-\frac{(130-\mu)^2}{2\times20^2}}$  
+$log\mathcal{L}=log\frac1{2\pi\times15\times20}-\frac{(95-\mu)^2}{2\times15^2}-\frac{(130-\mu)^2}{2\times20^2}$  
+$(log\mathcal{L})'=\frac{95-\mu}{15^2}+1.3\frac{130-1.3\mu}{20^2}$  
+Set
+$$\begin{aligned}
+(log\mathcal{L})'&=0\\
+\frac{95-\hat\mu}{15^2}+1.3\frac{130-1.3\hat\mu}{20^2}&=0\\
+\hat\mu&\approx97.4367
+\end{aligned}$$
+
+## Problem 4 (6.4-25)
+
+$E[X]=a_1E[X_1]+\dots+a_nE[X_n]=a_1\mu+\dots+a_n\mu=(a_1+\dots+a_n)\mu=\mu$  
+So, for constants $a_1,\dots,a_n$, under the condition $a_1+\dots+a_n=1$, $X$ is an unbiased estimator.  
+
+## Problem 5 (6.4-28)
+
+2 unbiased estimators of $\theta$ are $\frac{10}9\hat\theta_1$ and $\frac56\hat\theta_2$.
+$E[\frac{10}9\hat\theta_1]=E[\frac56\hat\theta_2]=\theta$  
+$Var(\frac{10}9\hat\theta_1)=\frac{100}{81}Var(\hat\theta_1)=\frac{100}{27}$  
+$Var(\frac56\hat\theta_2)=\frac{25}{36}Var(\hat\theta_2)=\frac{25}{18}$  
+$Relative$ $Efficiency=\frac{Var(\frac56\hat\theta_2)}{Var(\frac{10}9\hat\theta_1)}=\frac83$  
+Since $Relative$ $Efficiency>1$, $\frac56\hat\theta_2$ is more efficient.
+
+## Problem 6 (6.4-8)
+
+$\mathcal{L}(\theta;x_1,\dots,x_n)=f(x_1,\dots,x_n;\theta)=(\sqrt{\frac2{\pi}})^n\prod_{i=1}^nx_i^2e^{-\frac{\sum_{i=1}^nx_i^2}{2\theta^2}}\frac1{\theta^{3n}}$  
+$log\mathcal{L}(\theta;x_1,\dots,x_n)=nlog\sqrt{\frac2{\pi}}+2\sum_{i=1}^nlogx_i-\frac{\sum_{i=1}^nx_i^2}{2\theta^2}-3nlog\theta$  
+$(log\mathcal{L})'(\theta;x_1,\dots,x_n)=\frac{\sum_{i=1}^nx_i^2}{\theta^3}-\frac{3n}\theta$  
+Set
+$$\begin{aligned}
+(log\mathcal{L})'&=0\\
+\frac{\sum_{i=1}^nx_i^2}{\hat\theta^3}-\frac{3n}{\hat\theta}&=0\\
+\hat\theta&=\sqrt{\frac{\sum_{i=1}^nx_i^2}{3n}}
+\end{aligned}$$
+
+## Problem 7 (6.4-29)
+
+From the pdf, we know that $X_1,X_2,X_3$ follows exponential distribution with mean $\theta$.  
+$E[\hat\theta_1]=E[X_1]=\theta$  
+$E[\hat\theta_2]=E[\frac{X_1+X_2}2]=\frac12(E[X_1]+E[X_2])=\theta$  
+$E[\hat\theta_3]=E[\frac{X_1+2X_2}3]=\frac13(E[X_1]+2E[X_2])=\theta$  
+Therefore, all $\theta_i$ are unbiased.  
+$Var(\hat\theta_1)=Var(X_1)=\theta^2$  
+$Var(\hat\theta_2)=Var(\frac{X_1+X_2}2)=\frac14(Var(X_1)+Var(X_2))=\frac12\theta^2$  
+$Var(\hat\theta_3)=Var(\frac{X_1+2X_2}3)=\frac19(Var(X_1)+4Var(X_2))=\frac59\theta^2$  
+Since $Var(\hat\theta_1)>Var(\hat\theta_3)>Var(\hat\theta_2)$, $\hat\theta_2$ is the most efficient estimator.
+
+## Problem 8 (6.4-36)
+
+(a)
+$$\begin{aligned}
+E[W]&=E[a\bar{X}+(1-a)\bar{Y}]\\
+&=E[\frac{a}n\sum_{i=1}^nX_i+\frac{1-a}n\sum_{i=1}^nY_i]\\
+&=\frac{a}n\sum_{i=1}^nE[X_i]+\frac{1-a}n\sum_{i=1}^nE[Y_i]\\
+&=\frac{a}nn\mu+\frac{1-a}nn\mu\\
+&=\mu
+\end{aligned}$$
+
+(b)
+$$\begin{aligned}
+Var(W)&=Var(a\bar{X}+(1-a)\bar{Y})\\
+&=Var(\frac{a}n\sum_{i=1}^nX_i+\frac{1-a}n\sum_{i=1}^nY_i)\\
+&=\frac{a^2}{n^2}\sum_{i=1}^nVar(X_i)+\frac{(1-a)^2}{n^2}\sum_{i=1}^nVar(Y_i)\\
+&=\frac{a^2\sigma_1^2}n+\frac{(1-a)^2\sigma_2^2}n\\
+(Var(W))'&=\frac{2\sigma_1^2}na-\frac{2\sigma_2^2}n(1-a)\\
+\text{Set }(Var(W))'&=0\\
+\frac{2\sigma_1^2}na&=\frac{2\sigma_2^2}n(1-a)\\
+a&=\frac{\sigma_2^2}{\sigma_1^2+\sigma_2^2}
+\end{aligned}$$
+Since $Var(W)$ is a convex function, $a=\frac{\sigma_2^2}{\sigma_1^2+\sigma_2^2}$ is the solution to minimize variance of $W$.
+
+## Bonus 1 (6.4-14)
+
+```{r}
+nums <- c(2,3,5,9,10)
+mean(nums)
+var(nums)
+```
+
+Mean is $5.8$ and Variance is $12.7$.  
+$$\begin{cases}
+\frac12(\hat\alpha+\hat\beta)=5.8\\
+\frac1{12}(\hat\beta-\hat\alpha)^2=12.7
+\end{cases}
+\implies
+\begin{cases}
+\hat\alpha=5.8-\sqrt{38.1}\approx-0.3725\\
+\hat\beta=5.8+\sqrt{38.1}\approx11.9725
+\end{cases}$$
+
+## Bonus 2 (6.4-19)
+
+(a) Method of Moments
+$$\begin{aligned}
+E[X|\theta]&=\int_2^\infty x\frac{\theta2^\theta}{x^{\theta+1}}dx\\
+&=\int_2^\infty \frac{\theta2^\theta}{x^\theta}dx\\
+&=-\frac1{-\theta+1}\theta2^\theta x^{-\theta+1}\Bigr|_2^\infty\\
+&=\frac{2\theta}{\theta-1}\\
+\bar x&=\frac{2\hat\theta}{\hat\theta-1}\\
+\hat\theta&=\frac{\bar x}{\bar x-2}\text{ where }\bar x=\frac1n\sum_{i=1}^nx_i
+\end{aligned}$$
+
+(b) Maximum Likelihood
+$\mathcal{L}(\theta;x_1,\dots,x_n)=f(x_1,\dots,x_n;\theta)=\frac{\theta^n2^{n\theta}}{\prod_{i=1}^nx_i^{\theta+1}}$  
+$log\mathcal{L}(\theta;x_1,\dots,x_n)=nlog\theta+n\theta log2-\sum_{i=1}^n(\theta+1)logx_i$  
+$(log\mathcal{L})'(\theta;x_1,\dots,x_n)=\frac{n}\theta+nlog2-\sum_{i=1}^nlogx_i$
+Set
+$$\begin{aligned}
+(log\mathcal{L})'&=0\\
+\frac{n}{\hat\theta}+nlog2-\sum_{i=1}^nlogx_i&=0\\
+\hat\theta&=\frac{n}{\sum_{i=1}^nlogx_i-nlog2}\\
+&=\frac{n}{log\frac{\prod_{i=1}^nx_i}{2^n}}\\
+&=\frac{n}{log\prod_{i=1}^n\frac{x_i}2}\\
+&=\frac{n}{\sum_{i=1}^nlog\frac{x_i}2}
+\end{aligned}$$

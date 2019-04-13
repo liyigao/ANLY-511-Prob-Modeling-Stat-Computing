@@ -1,0 +1,250 @@
+---
+title: "HW4"
+author: "Yigao Li"
+date: "October 1, 2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 25
+
+```{r}
+v <- c()
+for (i in c(1:100)){
+  x <- 0
+  count <- 0
+  while (TRUE){
+    if (runif(1) > 0.5){
+      x <- x + 1
+    } else{
+      x <- x - 1
+    }
+    count <- count + 1
+    if (x == 15){
+      break
+    }
+  }
+  v = append(v, count)
+}
+boxplot(v)
+summary(v)
+```
+
+## Problem 26
+
+St. Petersburg strategy betting on a block of $6$ numbers.  
+- Bet 1 dollar  
+- After a loss, six times your last bet  
+- After a win, bet 1 dollar again  
+- Stop when you have lost all your money
+
+## Problem 27
+
+Let $X$ be the amount of dollars won or lost after a single game.  
+$Pr(X=3)=\frac{10}{38}=\frac{5}{19}$  
+$Pr(X=1)=\frac{8}{38}=\frac{4}{19}$  
+$Pr(X=-1)=\frac{8}{38}=\frac{4}{19}$  
+$Pr(X=-3)=\frac{12}{38}=\frac{6}{19}$  
+$E[X]=3\times\frac{5}{19}+\frac{4}{19}-\frac{4}{19}-3\times\frac{6}{19}=-\frac{3}{19}$
+
+## Problem 28
+
+False. Assume $j$ location is one of the corner tiles and $k$ is the adjacent tile along the longer side. The probability that the frog will jump from $j$ to $k$ is $\frac{1}{2}$ but the probability from $k$ to $j$ is $\frac{1}{3}$. Therefore, this random walk is not symmetric.
+
+## Problem 29
+
+$X$ follows discrete uniform distribution $X\sim U(1,n)$ and $Y$ follows binomial distribution $Y\sim Binom(k,p)$.  
+$$Pr(X=k)=\frac{1}{n}$$
+$$Pr(Y=y|X=k)=\begin{pmatrix}k\\y\end{pmatrix}p^y(1-p)^{1-y}$$
+$$\begin{aligned}
+Pr(X=k,Y=y)&=Pr(Y=y|X=k)Pr(X=k)\\
+&=\frac{1}{n}\begin{pmatrix}k\\y\end{pmatrix}p^y(1-p)^{1-y}\\
+\end{aligned}$$
+
+## Problem 30
+
+a)
+``` {r}
+m <- c(1/2, 1/4, 0, 1/4, 0, 0, 0, 0, 0,
+       1/6, 1/2, 1/6, 0, 1/6, 0, 0, 0, 0,
+       0, 1/4, 1/2, 0, 0, 1/4, 0, 0, 0,
+       1/6, 0, 0, 1/2, 1/6, 0, 1/6, 0, 0,
+       0, 1/6, 0, 1/6, 1/2, 1/6, 0, 0, 0,
+       0, 0, 1/4, 0, 1/4, 1/2, 0, 0, 0,
+       0, 0, 0, 1/4, 0, 0, 1/2, 1/4, 0,
+       0, 0, 0, 0, 0, 0, 1/4, 1/2, 1/4,
+       0, 0, 0, 0, 0, 0, 0, 0, 1)
+zog_transition_matrix <- matrix(m, ncol=9, nrow=9, byrow=T)
+zog_matrix <- zog_transition_matrix %*% zog_transition_matrix %*% zog_transition_matrix
+cat("P{ X3 = 3 | X0 = 1 } =", zog_matrix[1,3])
+```
+
+$$X_0=1
+\begin{cases}
+X_1=1(p=\frac{1}{2})
+  \begin{cases}
+  X_2=1(p=\frac{1}{2})\\
+  X_2=2(p=\frac{1}{4})\implies X_3=3(p=\frac{1}{6})\\
+  X_3=4(p=\frac{1}{4})\\
+  \end{cases}
+\\
+X_1=2(p=\frac{1}{4})
+  \begin{cases}
+  X_2=1(p=\frac{1}{6})\\
+  X_2=2(p=\frac{1}{2})\implies X_3=3(p=\frac{1}{6})\\
+  X_2=3(p=\frac{1}{6})\implies X_3=3(p=\frac{1}{2})\\
+  X_2=5(p=\frac{1}{6})\\
+  \end{cases}
+\\
+X_1=4(p=\frac{1}{4})\\
+\end{cases}$$
+$$Pr(X_3=3|x_0=1)=\frac{1}{2}\times\frac{1}{4}\times\frac{1}{6}+\frac{1}{4}\times\frac{1}{2}\times\frac{1}{6}+\frac{1}{4}\times\frac{1}{6}\times\frac{1}{2}=\frac{1}{16}=0.0625$$
+
+b)
+``` {r}
+m <- c(1/2, 1/4, 0, 1/4, 0, 0, 0, 0, 0,
+       1/6, 1/2, 1/6, 0, 1/6, 0, 0, 0, 0,
+       0, 1/4, 1/2, 0, 0, 1/4, 0, 0, 0,
+       1/6, 0, 0, 1/2, 1/6, 0, 1/6, 0, 0,
+       0, 1/6, 0, 1/6, 1/2, 1/6, 0, 0, 0,
+       0, 0, 1/4, 0, 1/4, 1/2, 0, 0, 0,
+       0, 0, 0, 1/4, 0, 0, 1/2, 1/4, 0,
+       0, 0, 0, 0, 0, 0, 1/4, 1/2, 1/4,
+       0, 0, 0, 0, 0, 0, 0, 0, 1)
+zog_transition_matrix <- matrix(m, ncol=9, nrow=9, byrow=T)
+
+a <- T
+count <- 0
+while (a){
+  zog_last_matrix <- zog_transition_matrix
+  zog_transition_matrix <- zog_transition_matrix %*% zog_transition_matrix
+  count <- count + 1
+  for (i in c(1:8)){
+    a <- F
+    if (zog_transition_matrix[i,9] < 0.5){
+      a <- T
+      break
+    }
+  }
+}
+
+b <- T
+while (b){
+  for (i in c(1:8)){
+    if (zog_last_matrix[i,9] < 0.5){
+      b <- F
+    }
+  }
+  if (b == T){
+    zog_last_matrix <- zog_transition_matrix
+    zog_transition_matrix <- zog_transition_matrix %*% zog_transition_matrix
+    count <- count + 1
+  }
+}
+
+cat("The chance of the caveman's survival for more than", count,
+    "steps is less 50% no matter where he starts.")
+```
+
+## Problem 31
+
+a)
+$N\sim Pois(\lambda)$, $Pr(N=n)=\frac{\lambda^ne^{-\lambda}}{n!}$  
+$X\sim Binom(n,p)$, $Pr(X=k|N=n)=\begin{pmatrix}n\\k\end{pmatrix}p^k(1-p)^{n-k}$  
+$Pr(X=k,N=n)=\frac{\lambda^ne^{-\lambda}}{n!}\begin{pmatrix}n\\k\end{pmatrix}p^k(1-p)^{n-k}$
+
+b)
+```{r}
+simX <- function(lambda, p, k){
+  n <- rpois(k, lambda = lambda)
+  b <- rbinom(k, size = n, prob = p)
+}
+```
+
+c)
+$\lambda=44$, $p=0.5$, $E[X]=\lambda p$
+```{r}
+mean(replicate(100, simX(44, 0.5, 100)))
+```
+
+## Problem 32
+
+a)
+$Pr(X<12|X<18)=\frac{Pr(X<12,X<18)}{Pr(X<18)}=\frac{Pr(X<12)}{Pr(X<18)}$
+```{r}
+pbinom(11, 80, 0.2)
+pbinom(17, 80, 0.2)
+pbinom(11, 80, 0.2)/pbinom(17, 80, 0.2)
+```
+$Pr(X<12|X<18)\approx0.1499783$
+
+$E[X|X<18]$
+```{r}
+E <- 0
+for (i in c(0:17)){
+  E <- E + i*dbinom(i, 80, 0.2)/pbinom(17, 80, 0.2)
+}
+print(E)
+```
+$E[X|X<18]\approx14.0393$
+
+b)
+```{r}
+x = 12:20
+denominator = pbinom(20, 80, 0.2) - pbinom(11, 80, 0.2)
+y = sapply(x, function (x) (pbinom(x, 80, 0.2) - pbinom(11, 80, 0.2))/denominator)
+plot(x, y, type = 'b', main = 'CDF of X|(12<=X<=20)', ylab = 'f(x|(12<=X<=20))')
+```
+
+c)
+```{r}
+n = 1e4
+xcz <- c()
+x <- rbinom(n, 80, 0.2)
+y <- rbinom(n, 100, 0.7)
+for (i in c(1:n)){
+  if (x[i] + y[i] == 90){
+    xcz = c(xcz, x[i])
+  }
+}
+plot(ecdf(xcz), main = 'CDF of X|Z=90', ylab = 'f(x|z=90)')
+```
+
+d)
+```{r}
+n = 1e4
+x <- rbinom(n, 80, 0.2)
+y <- rbinom(n, 100, 0.7)
+z <- c()
+k <- c(10, 15, 20)
+for (kvalue in k){
+  for (i in c(1:n)){
+    if (x[i] == kvalue){
+      z <- c(z, x[i]+y[i])
+    }
+  }
+  cat("E[Z|X=", kvalue, "]=", mean(z), "\n")
+}
+```
+
+e)
+```{r}
+n = 1e4
+x <- rbinom(n, 80, 0.2)
+y <- rbinom(n, 100, 0.7)
+xczk <- c()
+k <- c(80, 90, 100)
+for (kvalue in k){
+  for (i in c(1:n)){
+    if (x[i]+y[i] == kvalue){
+      xczk <- c(xczk, x[i])
+    }
+  }
+  cat("E[X|Z=", kvalue, "]=", mean(xczk), "\n")
+}
+```

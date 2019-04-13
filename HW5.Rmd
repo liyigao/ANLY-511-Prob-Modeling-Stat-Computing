@@ -1,0 +1,168 @@
+---
+title: "HW5"
+author: "Yigao Li"
+date: "October 8, 2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 33
+
+```{r}
+xa <- runif(1000, min = 0, max = 60)
+xb <- runif(1000, min = 0, max = 60)
+wa <- xa - xb
+for (i in c(1:1000)){
+  if (wa[i] < 0){
+    wa[i] <- 0
+  }
+}
+cat("Mean:", mean(wa))
+plot(ecdf(wa), main = "Empirical CDF of WA")
+```
+
+## Problem 34
+
+```{r}
+xl <- c()
+yl <- c()
+xs <- c()
+for (i in c(1:9000)){
+  x <- rexp(1, rate = 1)
+  xl <- c(xl, x)
+  y <- rpois(1, lambda = x)
+  yl <- c(yl, y)
+  if (y == 2){
+    xs <- c(xs, x)
+  }
+}
+hist(xs, main = "Histogram of X|Y=2")
+```
+
+## Problem 35
+
+```{r}
+Z <- c()
+for (i in c(1:5000)){
+  x <- rnorm(1)
+  y <- rnorm(1)
+  if (x + y >= 1){
+    Z <- c(Z, y)
+  }
+}
+hist(Z, breaks = 24)
+qqnorm(Z)
+cat("According to QQ Plot, Z may have a normal distribution.\n
+Mean:", mean(Z), "\n
+Standard deviation:", sd(Z))
+```
+
+## Problem 36
+
+$$\begin{aligned}
+E[Y|X]&=E[aX+b+Z|X]\\
+&=E[aX|X]+E[b|X]+E[Z|X]\\
+&=aE[X|X]+b+E[Z]\\
+&=aX+b+0=aX+b\\
+\end{aligned}$$
+
+## Problem 37
+
+a) $Y|\mathcal{A}=X$
+
+b) $Pr(\mathcal{A}|Y=x)=Pr(U<\frac{\ell(x)}M)=\frac{\ell(x)}M$
+
+c)
+$$\begin{aligned}
+Pr(\mathcal{A})&=\sum_{x\in\mathcal{R}}Pr(\mathcal{A}|Y=x)Pr(Y=x)\\
+&=\sum_{x\in\mathcal{R}}\frac{\ell(x)}M\frac1N\\
+&=\sum_{x\in\mathcal{R}}\frac{cp(x)}M\frac1N\\
+(\sum_{x\in\mathcal{R}}p(x)=1)&=\frac{c}{MN}\\
+\end{aligned}$$
+
+d)
+$$\begin{aligned}
+Pr(X=x)&=Pr(Y=x|\mathcal{A})\\
+&=\frac{Pr(\mathcal{A}|Y=x)Pr(Y=x)}{Pr(\mathcal{A})}\\
+&=\frac{\frac{\ell(x)}M\frac1N}{\frac{c}{MN}}\\
+&=\frac{\ell(x)}c\\
+&=p(x)
+\end{aligned}$$
+
+
+## Problem 38
+
+a)
+```{r}
+yl <- c()
+for (i in c(1:1000)){
+  x <- rpois(1, lambda = 50)
+  u <- runif(1)
+  y <- rbinom(1, size = x, prob = u)
+  yl <- c(yl, y)
+}
+hist(yl, main = "Histogram of Y|X=x,U=p")
+```
+
+b)
+```{r}
+xl <- c()
+for (j in c(1:60000)){
+  x <- rpois(1, lambda = 50)
+  u <- runif(1)
+  y <- rbinom(1, size = x, prob = u)
+  if (y == 25){
+    xl <- c(xl, x)
+  }
+}
+hist(xl, main = "Histogram of X|Y=25")
+```
+
+## Problem 39
+
+1. $E[Y|X=1]=E[Y_1]=\mu_1$, $E[Y|X=2]=E[Y_2]=\mu_2$,  
+$E[Y]=E[Y|X=1]Pr(X=1)+E[Y|X=2]Pr(X=2)=\mu_1w_1+\mu_2w_2$.
+
+2. $E[Y^2|X=1]=Var(Y|X=1)+E^2[Y|X=1]=Var(Y_1)+E^2[Y_1]=\sigma_1^2+\mu_1^2$, $E[Y^2|X=2]=Var(Y|X=2)+E^2[Y|X=2]=Var(Y_2)+E^2[Y_2]=\sigma_2^2+\mu_2^2$,  
+$Var(Y)=E[Var(Y|X)]+Var(E[Y|X])$  
+$=Var(Y|X=1)Pr(X=1)+Var(Y|X=2)Pr(X=2)+E[E^2[Y|X]]-E^2[E[Y|X]]$  
+$=\sigma_1^2w_1+\sigma_2^2w_2+\mu_1^2w_1+\mu_2^2w_2-(\mu_1w_1+\mu_2w_2)^2$
+
+3.
+```{r}
+Y <- c()
+y1 <- rnorm(10000, mean = -2, sd = 1)
+y2 <- rnorm(10000, mean = 1, sd = sqrt(2))
+w1 <- 0.2
+w2 <- 0.8
+x <- sample.int(2, 10000, replace = TRUE, prob = c(w1, w2))
+for (i in c(1:10000)){
+  if (x[i] == 1){
+    Y <- c(Y, y1[i])
+  } else{
+    Y <- c(Y, y2[i])
+  }
+}
+hist(Y, freq = FALSE)
+```
+
+## Problem 40
+
+Find $Pr(\bar{x}>51)$  
+By CLT, $\frac{S_{30}-30\times48}{\sqrt{30}}\sim N(0,9^2)$  
+$$\begin{aligned}
+Pr(\bar{x}>51)&=Pr(30\bar{x}>30\times51)\\
+&=Pr(30\bar{x}-30\times48>30\times51-30\times48)\\
+&=Pr(\frac{30\bar{x}-30\times48}{\sqrt{30}}>\frac{30\times51-30\times48}{\sqrt{30}})\\
+&=Pr(\frac{30\bar{x}-30\times48}{\sqrt{30}}>3\sqrt{30})\\
+\end{aligned}$$
+
+```{r}
+cat("Therefore, the estimated probability the mean height of a random sample of 30 boys is",
+    pnorm(3*sqrt(30), sd = 9, lower.tail = FALSE))
+```
